@@ -15,6 +15,7 @@ import Dashboard from "./pages/Dashboard";
 import CreateProduct from "./pages/CreateProduct";
 import CheckoutBuilder from "./pages/CheckoutBuilder";
 import CheckoutList from "./pages/CheckoutList";
+import MyProducts from "./pages/MyProducts";
 import UserSettings from "./pages/UserSettings";
 import NotFound from "./pages/NotFound";
 
@@ -65,6 +66,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <CheckoutList />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/my-products" 
+        element={
+          <ProtectedRoute>
+            <MyProducts />
           </ProtectedRoute>
         } 
       />

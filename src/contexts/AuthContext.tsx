@@ -9,12 +9,24 @@ interface User {
   email?: string;
 }
 
+interface PurchasedProduct {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  purchaseDate: string;
+  downloadUrl?: string;
+  coverImage?: string;
+}
+
 interface AuthContextType {
   user: User | null;
+  purchasedProducts: PurchasedProduct[];
   login: (phone: string, password: string) => Promise<boolean>;
   register: (userData: RegisterData) => Promise<boolean>;
   logout: () => void;
   updateUser: (userData: Partial<User>) => void;
+  addPurchasedProduct: (product: PurchasedProduct) => void;
   isLoading: boolean;
 }
 
@@ -29,14 +41,22 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [purchasedProducts, setPurchasedProducts] = useState<PurchasedProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Check for stored user data on mount
     const storedUser = localStorage.getItem('checkout-user');
+    const storedProducts = localStorage.getItem('checkout-purchased-products');
+    
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
+    
+    if (storedProducts) {
+      setPurchasedProducts(JSON.parse(storedProducts));
+    }
+    
     setIsLoading(false);
   }, []);
 
@@ -56,6 +76,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     setUser(mockUser);
     localStorage.setItem('checkout-user', JSON.stringify(mockUser));
+    
+    // Load user's purchased products
+    const userProducts = localStorage.getItem(`checkout-products-${phone}`);
+    if (userProducts) {
+      const products = JSON.parse(userProducts);
+      setPurchasedProducts(products);
+      localStorage.setItem('checkout-purchased-products', JSON.stringify(products));
+    }
+    
     setIsLoading(false);
     return true;
   };
@@ -76,13 +105,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     setUser(newUser);
     localStorage.setItem('checkout-user', JSON.stringify(newUser));
+    
+    // Initialize empty purchased products for new user
+    setPurchasedProducts([]);
+    localStorage.setItem('checkout-purchased-products', JSON.stringify([]));
+    
     setIsLoading(false);
     return true;
   };
 
   const logout = () => {
     setUser(null);
+    setPurchasedProducts([]);
     localStorage.removeItem('checkout-user');
+    localStorage.removeItem('checkout-purchased-products');
   };
 
   const updateUser = (userData: Partial<User>) => {
@@ -93,13 +129,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const addPurchasedProduct = (product: PurchasedProduct) => {
+    const updatedProducts = [...purchasedProducts, product];
+    setPurchasedProducts(updatedProducts);
+    localStorage.setItem('checkout-purchased-products', JSON.stringify(updatedProducts));
+    
+    // Also store by phone number for future logins
+    if (user) {
+      localStorage.setItem(`checkout-products-${user.phone}`, JSON.stringify(updatedProducts));
+    }
+  };
+
   return (
     <AuthContext.Provider value={{
       user,
+      purchasedProducts,
       login,
       register,
       logout,
       updateUser,
+      addPurchasedProduct,
       isLoading
     }}>
       {children}

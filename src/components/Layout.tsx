@@ -9,7 +9,8 @@ import {
   Settings, 
   LogOut,
   Menu,
-  X
+  X,
+  ShoppingBag
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -32,6 +33,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { name: 'Dashboard', href: '/dashboard', icon: Home },
     { name: 'Criar Produto', href: '/create-product', icon: Package },
     { name: 'Checkouts', href: '/checkouts', icon: CreditCard },
+    { name: 'Meus Produtos', href: '/my-products', icon: ShoppingBag },
     { name: 'Configurações', href: '/settings', icon: Settings },
   ];
 
