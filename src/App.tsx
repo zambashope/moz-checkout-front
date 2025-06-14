@@ -17,6 +17,7 @@ import CheckoutBuilder from "./pages/CheckoutBuilder";
 import CheckoutList from "./pages/CheckoutList";
 import MyProducts from "./pages/MyProducts";
 import UserSettings from "./pages/UserSettings";
+import Analytics from "./pages/Analytics";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -66,6 +67,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <CheckoutList />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/analytics" 
+        element={
+          <ProtectedRoute>
+            <Analytics />
           </ProtectedRoute>
         } 
       />

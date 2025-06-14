@@ -1,0 +1,421 @@
+
+{
+  "users": [
+    {
+      "_id": "67890abcdef123456789012",
+      "name": "João Silva",
+      "email": "joao@email.com",
+      "password": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/bJP9LYK6N8/bJP9LY",
+      "avatar": "https://storage.url/avatars/joao.jpg",
+      "phone": "+258841234567",
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-01-15T10:30:00.000Z",
+      "isActive": true,
+      "subscription": {
+        "plan": "premium",
+        "status": "active",
+        "expiresAt": "2024-12-15T10:30:00.000Z"
+      }
+    }
+  ],
+  "products": [
+    {
+      "_id": "12345abcdef678901234567",
+      "userId": "67890abcdef123456789012",
+      "title": "E-book: Marketing Digital Completo",
+      "description": "Aprenda as melhores estratégias de marketing digital para alavancar seu negócio. Este e-book contém mais de 100 páginas com técnicas comprovadas, estudos de caso reais e templates prontos para usar.",
+      "price": 99.99,
+      "currency": "MZN",
+      "category": "ebook",
+      "tags": ["marketing", "digital", "vendas", "negócios", "estratégia"],
+      "coverImage": {
+        "url": "https://storage.url/products/marketing-ebook-cover.jpg",
+        "filename": "marketing-ebook-cover.jpg",
+        "size": 2048000
+      },
+      "productFile": {
+        "url": "https://storage.url/products/marketing-digital-completo.pdf",
+        "filename": "marketing-digital-completo.pdf",
+        "size": 15360000,
+        "type": "application/pdf"
+      },
+      "status": "active",
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-01-20T14:15:00.000Z",
+      "stats": {
+        "totalSales": 156,
+        "totalRevenue": 15599.44,
+        "views": 1234
+      }
+    },
+    {
+      "_id": "23456bcdef789012345678",
+      "userId": "67890abcdef123456789012",
+      "title": "Curso: React Avançado",
+      "description": "Curso completo de React com Next.js, TypeScript e integração com APIs. Inclui projetos práticos e certificado de conclusão.",
+      "price": 299.99,
+      "currency": "MZN",
+      "category": "course",
+      "tags": ["react", "javascript", "frontend", "programação", "nextjs"],
+      "coverImage": {
+        "url": "https://storage.url/products/react-course-cover.jpg",
+        "filename": "react-course-cover.jpg",
+        "size": 1536000
+      },
+      "productFile": {
+        "url": "https://storage.url/products/react-avancado-curso.zip",
+        "filename": "react-avancado-curso.zip",
+        "size": 512000000,
+        "type": "application/zip"
+      },
+      "status": "active",
+      "createdAt": "2024-01-10T08:45:00.000Z",
+      "updatedAt": "2024-01-18T16:20:00.000Z",
+      "stats": {
+        "totalSales": 42,
+        "totalRevenue": 12599.58,
+        "views": 567
+      }
+    },
+    {
+      "_id": "34567cdef890123456789",
+      "userId": "67890abcdef123456789012",
+      "title": "Template: Landing Page Profissional",
+      "description": "Template responsivo para landing pages de alta conversão. Inclui 5 variações de design, código HTML/CSS otimizado e documentação completa.",
+      "price": 49.99,
+      "currency": "MZN",
+      "category": "template",
+      "tags": ["template", "landing page", "html", "css", "design"],
+      "coverImage": {
+        "url": "https://storage.url/products/landing-template-cover.jpg",
+        "filename": "landing-template-cover.jpg",
+        "size": 1024000
+      },
+      "productFile": {
+        "url": "https://storage.url/products/landing-page-template.zip",
+        "filename": "landing-page-template.zip",
+        "size": 25600000,
+        "type": "application/zip"
+      },
+      "status": "active",
+      "createdAt": "2024-01-05T11:15:00.000Z",
+      "updatedAt": "2024-01-15T09:30:00.000Z",
+      "stats": {
+        "totalSales": 89,
+        "totalRevenue": 4449.11,
+        "views": 891
+      }
+    }
+  ],
+  "checkouts": [
+    {
+      "_id": "45678def901234567890123",
+      "userId": "67890abcdef123456789012",
+      "productId": "12345abcdef678901234567",
+      "title": "🔥 E-book Marketing Digital - Oferta Especial",
+      "description": "Transforme seu negócio com as estratégias de marketing digital mais eficazes do mercado!",
+      "customMessage": "⏰ PROMOÇÃO LIMITADA: Apenas nos próximos 3 dias você garante 50% de desconto + bônus exclusivos!",
+      "url": "marketing-digital-ebook-oferta",
+      "settings": {
+        "collectPhone": true,
+        "collectEmail": true,
+        "showTimer": true,
+        "timerDuration": 600
+      },
+      "customization": {
+        "primaryColor": "#dc2626",
+        "buttonColor": "#ef4444",
+        "backgroundColor": "#ffffff",
+        "textColor": "#1f2937",
+        "borderRadius": "8",
+        "fontFamily": "Inter, sans-serif"
+      },
+      "upsells": [
+        {
+          "productId": "23456bcdef789012345678",
+          "title": "🚀 OFERTA IMPERDÍVEL: Curso React Avançado",
+          "description": "Complemente seu aprendizado com nosso curso mais vendido! Aprenda React do zero ao avançado com projetos reais.",
+          "price": 199.99,
+          "originalPrice": 299.99,
+          "order": 1
+        }
+      ],
+      "downsells": [
+        {
+          "productId": "34567cdef890123456789",
+          "title": "💡 Alternativa Mais Acessível: Template Landing Page",
+          "description": "Se o curso está fora do orçamento, que tal começar com nosso template profissional?",
+          "price": 29.99,
+          "originalPrice": 49.99,
+          "order": 1
+        }
+      ],
+      "status": "active",
+      "createdAt": "2024-01-15T12:00:00.000Z",
+      "updatedAt": "2024-01-20T16:45:00.000Z",
+      "stats": {
+        "views": 456,
+        "sales": 23,
+        "conversionRate": 5.04,
+        "revenue": 2277.77,
+        "upsellConversions": 8,
+        "downsellConversions": 3
+      }
+    },
+    {
+      "_id": "56789ef012345678901234",
+      "userId": "67890abcdef123456789012",
+      "productId": "23456bcdef789012345678",
+      "title": "Curso React Avançado - Torne-se um Dev Frontend",
+      "description": "Do zero ao profissional: domine React, Next.js e TypeScript com projetos reais do mercado.",
+      "customMessage": "🎯 Vagas limitadas: Apenas 50 alunos por turma para garantir acompanhamento personalizado!",
+      "url": "curso-react-avancado-dev-frontend",
+      "settings": {
+        "collectPhone": true,
+        "collectEmail": true,
+        "showTimer": false,
+        "timerDuration": 0
+      },
+      "customization": {
+        "primaryColor": "#2563eb",
+        "buttonColor": "#3b82f6",
+        "backgroundColor": "#ffffff",
+        "textColor": "#1f2937",
+        "borderRadius": "12",
+        "fontFamily": "Poppins, sans-serif"
+      },
+      "upsells": [
+        {
+          "productId": "12345abcdef678901234567",
+          "title": "📚 BÔNUS: E-book Marketing Digital",
+          "description": "Aprenda também como divulgar seus projetos e conseguir mais clientes!",
+          "price": 49.99,
+          "originalPrice": 99.99,
+          "order": 1
+        }
+      ],
+      "downsells": [],
+      "status": "active",
+      "createdAt": "2024-01-12T09:30:00.000Z",
+      "updatedAt": "2024-01-19T11:20:00.000Z",
+      "stats": {
+        "views": 234,
+        "sales": 12,
+        "conversionRate": 5.13,
+        "revenue": 3599.88,
+        "upsellConversions": 4,
+        "downsellConversions": 0
+      }
+    }
+  ],
+  "orders": [
+    {
+      "_id": "67890f012345678901234a",
+      "checkoutId": "45678def901234567890123",
+      "customerId": "789abc012def345678901234",
+      "orderNumber": "ORD-2024-001234",
+      "customer": {
+        "name": "Maria Santos Silva",
+        "email": "maria.santos@email.com",
+        "phone": "+258841234567"
+      },
+      "items": [
+        {
+          "productId": "12345abcdef678901234567",
+          "title": "E-book: Marketing Digital Completo",
+          "price": 99.99,
+          "quantity": 1,
+          "type": "main"
+        },
+        {
+          "productId": "23456bcdef789012345678",
+          "title": "Curso: React Avançado",
+          "price": 199.99,
+          "quantity": 1,
+          "type": "upsell"
+        }
+      ],
+      "totals": {
+        "subtotal": 299.98,
+        "tax": 0.00,
+        "discount": 0.00,
+        "total": 299.98,
+        "currency": "MZN"
+      },
+      "payment": {
+        "method": "mpesa",
+        "status": "completed",
+        "transactionId": "MPesa20240120143045",
+        "reference": "REF789456123",
+        "paidAt": "2024-01-20T14:30:45.000Z"
+      },
+      "fulfillment": {
+        "status": "fulfilled",
+        "downloadLinks": [
+          {
+            "productId": "12345abcdef678901234567",
+            "url": "https://secure-download.url/ebook-marketing-digital/token_abc123",
+            "expiresAt": "2024-01-27T14:30:45.000Z",
+            "downloadCount": 2,
+            "maxDownloads": 5
+          },
+          {
+            "productId": "23456bcdef789012345678",
+            "url": "https://secure-download.url/curso-react-avancado/token_def456",
+            "expiresAt": "2024-01-27T14:30:45.000Z",
+            "downloadCount": 1,
+            "maxDownloads": 3
+          }
+        ],
+        "fulfilledAt": "2024-01-20T14:31:15.000Z"
+      },
+      "createdAt": "2024-01-20T14:30:00.000Z",
+      "updatedAt": "2024-01-20T14:31:15.000Z"
+    },
+    {
+      "_id": "78901g123456789012345b",
+      "checkoutId": "45678def901234567890123",
+      "customerId": "890bcd123ef456789012345",
+      "orderNumber": "ORD-2024-001235",
+      "customer": {
+        "name": "Pedro Costa Nunes",
+        "email": "pedro.nunes@empresa.co.mz",
+        "phone": "+258847654321"
+      },
+      "items": [
+        {
+          "productId": "12345abcdef678901234567",
+          "title": "E-book: Marketing Digital Completo",
+          "price": 99.99,
+          "quantity": 1,
+          "type": "main"
+        }
+      ],
+      "totals": {
+        "subtotal": 99.99,
+        "tax": 0.00,
+        "discount": 0.00,
+        "total": 99.99,
+        "currency": "MZN"
+      },
+      "payment": {
+        "method": "card",
+        "status": "pending",
+        "transactionId": "CARD20240120131500",
+        "reference": "REF456789012",
+        "paidAt": null
+      },
+      "fulfillment": {
+        "status": "pending",
+        "downloadLinks": [],
+        "fulfilledAt": null
+      },
+      "createdAt": "2024-01-20T13:15:00.000Z",
+      "updatedAt": "2024-01-20T13:15:30.000Z"
+    }
+  ],
+  "customers": [
+    {
+      "_id": "789abc012def345678901234",
+      "name": "Maria Santos Silva",
+      "email": "maria.santos@email.com",
+      "phone": "+258841234567",
+      "purchases": [
+        {
+          "orderId": "67890f012345678901234a",
+          "productId": "12345abcdef678901234567",
+          "title": "E-book: Marketing Digital Completo",
+          "amount": 99.99,
+          "purchaseDate": "2024-01-20T14:30:45.000Z"
+        },
+        {
+          "orderId": "67890f012345678901234a",
+          "productId": "23456bcdef789012345678",
+          "title": "Curso: React Avançado",
+          "amount": 199.99,
+          "purchaseDate": "2024-01-20T14:30:45.000Z"
+        }
+      ],
+      "totalSpent": 299.98,
+      "totalOrders": 1,
+      "averageOrderValue": 299.98,
+      "createdAt": "2024-01-20T14:30:00.000Z",
+      "updatedAt": "2024-01-20T14:31:15.000Z"
+    },
+    {
+      "_id": "890bcd123ef456789012345",
+      "name": "Pedro Costa Nunes",
+      "email": "pedro.nunes@empresa.co.mz",
+      "phone": "+258847654321",
+      "purchases": [],
+      "totalSpent": 0.00,
+      "totalOrders": 0,
+      "averageOrderValue": 0.00,
+      "createdAt": "2024-01-20T13:15:00.000Z",
+      "updatedAt": "2024-01-20T13:15:00.000Z"
+    }
+  ],
+  "analytics": [
+    {
+      "_id": "901cde234f567890123456",
+      "userId": "67890abcdef123456789012",
+      "checkoutId": "45678def901234567890123",
+      "sessionId": "sess_20240120143000_abc123",
+      "event": "page_view",
+      "data": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "ip": "197.220.10.156",
+        "country": "MZ",
+        "city": "Maputo",
+        "referrer": "https://www.google.com/search?q=marketing+digital",
+        "utm_source": "google",
+        "utm_medium": "organic",
+        "utm_campaign": null,
+        "device": "desktop",
+        "browser": "Chrome"
+      },
+      "timestamp": "2024-01-20T14:30:00.000Z"
+    },
+    {
+      "_id": "012def345g678901234567",
+      "userId": "67890abcdef123456789012",
+      "checkoutId": "45678def901234567890123",
+      "sessionId": "sess_20240120143000_abc123",
+      "event": "form_start",
+      "data": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "ip": "197.220.10.156",
+        "country": "MZ",
+        "city": "Maputo",
+        "referrer": "https://www.google.com/search?q=marketing+digital",
+        "utm_source": "google",
+        "utm_medium": "organic",
+        "utm_campaign": null,
+        "timeOnPage": 120
+      },
+      "timestamp": "2024-01-20T14:32:00.000Z"
+    },
+    {
+      "_id": "123ef456h789012345678",
+      "userId": "67890abcdef123456789012",
+      "checkoutId": "45678def901234567890123",
+      "sessionId": "sess_20240120143000_abc123",
+      "event": "purchase",
+      "data": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "ip": "197.220.10.156",
+        "country": "MZ",
+        "city": "Maputo",
+        "referrer": "https://www.google.com/search?q=marketing+digital",
+        "utm_source": "google",
+        "utm_medium": "organic",
+        "utm_campaign": null,
+        "orderId": "67890f012345678901234a",
+        "orderValue": 299.98,
+        "paymentMethod": "mpesa",
+        "timeToConversion": 300
+      },
+      "timestamp": "2024-01-20T14:35:00.000Z"
+    }
+  ]
+}
