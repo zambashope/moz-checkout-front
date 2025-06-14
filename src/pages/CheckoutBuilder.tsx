@@ -3,6 +3,7 @@ import Layout from '../components/Layout';
 import ProductSelector from '../components/ProductSelector';
 import UpsellDownsellManager from '../components/UpsellDownsellManager';
 import CheckoutPreview from '../components/CheckoutPreview';
+import CheckoutCustomizer from '../components/CheckoutCustomizer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,7 +11,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
-import { Save, Eye, Settings, Package, TrendingUp } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Save, Eye, Settings, Package, TrendingUp, Palette } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 // Mock products data - in real app this would come from API/database
@@ -54,6 +56,14 @@ const CheckoutBuilder = () => {
   const [showPreview, setShowPreview] = useState(false);
   const [upsells, setUpsells] = useState<Product[]>([]);
   const [downsells, setDownsells] = useState<Product[]>([]);
+  
+  // Novos estados para personalização
+  const [primaryColor, setPrimaryColor] = useState('#dc2626');
+  const [buttonColor, setButtonColor] = useState('#ef4444');
+  const [backgroundColor, setBackgroundColor] = useState('#ffffff');
+  const [textColor, setTextColor] = useState('#000000');
+  const [borderRadius, setBorderRadius] = useState('8');
+  const [fontFamily, setFontFamily] = useState('Inter, sans-serif');
 
   const selectedProduct = mockProducts.find(p => p.id === selectedProductId);
 
@@ -138,129 +148,200 @@ const CheckoutBuilder = () => {
     setShowPreview(true);
   };
 
+  const handleColorChange = (type: string, color: string) => {
+    switch (type) {
+      case 'primary':
+        setPrimaryColor(color);
+        break;
+      case 'button':
+        setButtonColor(color);
+        break;
+      case 'background':
+        setBackgroundColor(color);
+        break;
+      case 'text':
+        setTextColor(color);
+        break;
+    }
+  };
+
+  const handleStyleChange = (type: string, value: string) => {
+    switch (type) {
+      case 'borderRadius':
+        setBorderRadius(value);
+        break;
+      case 'font':
+        setFontFamily(value);
+        break;
+    }
+  };
+
   return (
     <Layout>
-      <div className="p-6 max-w-6xl mx-auto">
+      <div className="p-6 max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Construtor de Checkout</h1>
           <p className="text-gray-600">Configure seu checkout personalizado para vender seus produtos</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Main Configuration */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Product Selection */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Package className="h-5 w-5" />
-                  Seleção de Produto
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ProductSelector
-                  products={mockProducts}
-                  selectedProductId={selectedProductId}
-                  onSelectProduct={setSelectedProductId}
-                />
-              </CardContent>
-            </Card>
+          <div className="lg:col-span-3">
+            <Tabs defaultValue="config" className="space-y-6">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="config" className="flex items-center gap-2">
+                  <Settings className="h-4 w-4" />
+                  Configuração
+                </TabsTrigger>
+                <TabsTrigger value="design" className="flex items-center gap-2">
+                  <Palette className="h-4 w-4" />
+                  Design
+                </TabsTrigger>
+                <TabsTrigger value="upsells" className="flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4" />
+                  Upsells
+                </TabsTrigger>
+              </TabsList>
 
-            {/* Checkout Configuration */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5" />
-                  Configuração do Checkout
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="title">Título do Checkout</Label>
-                  <Input
-                    id="title"
-                    placeholder="Ex: Adquira seu E-book agora!"
-                    value={checkoutTitle}
-                    onChange={(e) => setCheckoutTitle(e.target.value)}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="description">Descrição (opcional)</Label>
-                  <Textarea
-                    id="description"
-                    placeholder="Adicione uma descrição personalizada para seu checkout..."
-                    value={checkoutDescription}
-                    onChange={(e) => setCheckoutDescription(e.target.value)}
-                    rows={3}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="message">Mensagem Personalizada (opcional)</Label>
-                  <Textarea
-                    id="message"
-                    placeholder="Ex: Obrigado pela sua compra! Você receberá o produto em instantes..."
-                    value={customMessage}
-                    onChange={(e) => setCustomMessage(e.target.value)}
-                    rows={2}
-                  />
-                </div>
-
-                <Separator />
-
-                <div className="space-y-4">
-                  <h4 className="font-medium text-gray-900">Campos de Coleta</h4>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label className="text-sm font-normal">Coletar Número de Telefone</Label>
-                      <p className="text-xs text-gray-500">Obrigatório para identificar compras futuras</p>
-                    </div>
-                    <Switch
-                      checked={collectPhone}
-                      onCheckedChange={setCollectPhone}
+              <TabsContent value="config" className="space-y-6">
+                {/* Product Selection */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Package className="h-5 w-5" />
+                      Seleção de Produto
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ProductSelector
+                      products={mockProducts}
+                      selectedProductId={selectedProductId}
+                      onSelectProduct={setSelectedProductId}
                     />
-                  </div>
+                  </CardContent>
+                </Card>
 
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label className="text-sm font-normal">Coletar E-mail</Label>
-                      <p className="text-xs text-gray-500">Para envio de confirmações e updates</p>
+                {/* Checkout Configuration */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Settings className="h-5 w-5" />
+                      Configuração do Checkout
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="title">Título do Checkout</Label>
+                      <Input
+                        id="title"
+                        placeholder="Ex: Adquira seu E-book agora!"
+                        value={checkoutTitle}
+                        onChange={(e) => setCheckoutTitle(e.target.value)}
+                      />
                     </div>
-                    <Switch
-                      checked={collectEmail}
-                      onCheckedChange={setCollectEmail}
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
 
-            {/* Upsells e Downsells */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5" />
-                  Upsells e Downsells
-                </CardTitle>
-                <p className="text-sm text-gray-500">
-                  Configure produtos complementares e alternativas mais baratas
-                </p>
-              </CardHeader>
-              <CardContent>
-                <UpsellDownsellManager
-                  products={mockProducts}
-                  selectedProductId={selectedProductId}
-                  upsells={upsells}
-                  downsells={downsells}
-                  onAddUpsell={handleAddUpsell}
-                  onRemoveUpsell={handleRemoveUpsell}
-                  onAddDownsell={handleAddDownsell}
-                  onRemoveDownsell={handleRemoveDownsell}
-                />
-              </CardContent>
-            </Card>
+                    <div className="space-y-2">
+                      <Label htmlFor="description">Descrição (opcional)</Label>
+                      <Textarea
+                        id="description"
+                        placeholder="Adicione uma descrição personalizada para seu checkout..."
+                        value={checkoutDescription}
+                        onChange={(e) => setCheckoutDescription(e.target.value)}
+                        rows={3}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="message">Mensagem Personalizada (opcional)</Label>
+                      <Textarea
+                        id="message"
+                        placeholder="Ex: Obrigado pela sua compra! Você receberá o produto em instantes..."
+                        value={customMessage}
+                        onChange={(e) => setCustomMessage(e.target.value)}
+                        rows={2}
+                      />
+                    </div>
+
+                    <Separator />
+
+                    <div className="space-y-4">
+                      <h4 className="font-medium text-gray-900">Campos de Coleta</h4>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-sm font-normal">Coletar Número de Telefone</Label>
+                          <p className="text-xs text-gray-500">Obrigatório para identificar compras futuras</p>
+                        </div>
+                        <Switch
+                          checked={collectPhone}
+                          onCheckedChange={setCollectPhone}
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-sm font-normal">Coletar E-mail</Label>
+                          <p className="text-xs text-gray-500">Para envio de confirmações e updates</p>
+                        </div>
+                        <Switch
+                          checked={collectEmail}
+                          onCheckedChange={setCollectEmail}
+                        />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="design">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Palette className="h-5 w-5" />
+                      Personalização Visual
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CheckoutCustomizer
+                      primaryColor={primaryColor}
+                      buttonColor={buttonColor}
+                      backgroundColor={backgroundColor}
+                      textColor={textColor}
+                      borderRadius={borderRadius}
+                      fontFamily={fontFamily}
+                      onColorChange={handleColorChange}
+                      onStyleChange={handleStyleChange}
+                    />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="upsells">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <TrendingUp className="h-5 w-5" />
+                      Upsells e Downsells
+                    </CardTitle>
+                    <p className="text-sm text-gray-500">
+                      Configure produtos complementares e alternativas mais baratas
+                    </p>
+                  </CardHeader>
+                  <CardContent>
+                    <UpsellDownsellManager
+                      products={mockProducts}
+                      selectedProductId={selectedProductId}
+                      upsells={upsells}
+                      downsells={downsells}
+                      onAddUpsell={handleAddUpsell}
+                      onRemoveUpsell={handleRemoveUpsell}
+                      onAddDownsell={handleAddDownsell}
+                      onRemoveDownsell={handleRemoveDownsell}
+                    />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
           </div>
 
           {/* Preview/Summary */}
@@ -355,6 +436,12 @@ const CheckoutBuilder = () => {
             collectEmail={collectEmail}
             upsells={upsells}
             downsells={downsells}
+            primaryColor={primaryColor}
+            buttonColor={buttonColor}
+            backgroundColor={backgroundColor}
+            textColor={textColor}
+            borderRadius={borderRadius}
+            fontFamily={fontFamily}
             onClose={() => setShowPreview(false)}
           />
         )}
