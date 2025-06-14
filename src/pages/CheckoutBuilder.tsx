@@ -1,7 +1,8 @@
-
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
 import ProductSelector from '../components/ProductSelector';
+import UpsellDownsellManager from '../components/UpsellDownsellManager';
+import CheckoutPreview from '../components/CheckoutPreview';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
-import { Save, Eye, Settings, Package } from 'lucide-react';
+import { Save, Eye, Settings, Package, TrendingUp } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 // Mock products data - in real app this would come from API/database
@@ -34,6 +35,14 @@ const mockProducts = [
   }
 ];
 
+interface Product {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  coverImage?: string;
+}
+
 const CheckoutBuilder = () => {
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [checkoutTitle, setCheckoutTitle] = useState('');
@@ -42,8 +51,35 @@ const CheckoutBuilder = () => {
   const [collectPhone, setCollectPhone] = useState(true);
   const [collectEmail, setCollectEmail] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [upsells, setUpsells] = useState<Product[]>([]);
+  const [downsells, setDownsells] = useState<Product[]>([]);
 
   const selectedProduct = mockProducts.find(p => p.id === selectedProductId);
+
+  const handleAddUpsell = (product: Product) => {
+    setUpsells(prev => [...prev, product]);
+    toast({
+      title: "Upsell adicionado!",
+      description: `${product.title} foi adicionado como upsell`
+    });
+  };
+
+  const handleRemoveUpsell = (productId: string) => {
+    setUpsells(prev => prev.filter(p => p.id !== productId));
+  };
+
+  const handleAddDownsell = (product: Product) => {
+    setDownsells(prev => [...prev, product]);
+    toast({
+      title: "Downsell adicionado!",
+      description: `${product.title} foi adicionado como downsell`
+    });
+  };
+
+  const handleRemoveDownsell = (productId: string) => {
+    setDownsells(prev => prev.filter(p => p.id !== productId));
+  };
 
   const handleSaveCheckout = async () => {
     if (!selectedProductId) {
@@ -76,7 +112,9 @@ const CheckoutBuilder = () => {
       description: checkoutDescription,
       customMessage,
       collectPhone,
-      collectEmail
+      collectEmail,
+      upsells: upsells.map(u => u.id),
+      downsells: downsells.map(d => d.id)
     });
     
     setIsLoading(false);
@@ -97,11 +135,7 @@ const CheckoutBuilder = () => {
       return;
     }
     
-    // Mock preview functionality
-    toast({
-      title: "Preview em desenvolvimento",
-      description: "Funcionalidade de preview será implementada em breve"
-    });
+    setShowPreview(true);
   };
 
   return (
@@ -202,6 +236,31 @@ const CheckoutBuilder = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Upsells e Downsells */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5" />
+                  Upsells e Downsells
+                </CardTitle>
+                <p className="text-sm text-gray-500">
+                  Configure produtos complementares e alternativas mais baratas
+                </p>
+              </CardHeader>
+              <CardContent>
+                <UpsellDownsellManager
+                  products={mockProducts}
+                  selectedProductId={selectedProductId}
+                  upsells={upsells}
+                  downsells={downsells}
+                  onAddUpsell={handleAddUpsell}
+                  onRemoveUpsell={handleRemoveUpsell}
+                  onAddDownsell={handleAddDownsell}
+                  onRemoveDownsell={handleRemoveDownsell}
+                />
+              </CardContent>
+            </Card>
           </div>
 
           {/* Preview/Summary */}
@@ -242,6 +301,16 @@ const CheckoutBuilder = () => {
                         {collectEmail && <li>• E-mail</li>}
                       </ul>
                     </div>
+                    
+                    {(upsells.length > 0 || downsells.length > 0) && (
+                      <div className="text-xs text-gray-500">
+                        <p>Ofertas adicionais:</p>
+                        <ul className="mt-1 space-y-1">
+                          {upsells.length > 0 && <li>• {upsells.length} upsell(s)</li>}
+                          {downsells.length > 0 && <li>• {downsells.length} downsell(s)</li>}
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="text-center text-gray-500 py-8">
@@ -258,7 +327,7 @@ const CheckoutBuilder = () => {
                     disabled={!selectedProductId}
                   >
                     <Eye className="h-4 w-4 mr-2" />
-                    Visualizar
+                    Visualizar Preview
                   </Button>
                   
                   <Button 
@@ -274,6 +343,21 @@ const CheckoutBuilder = () => {
             </Card>
           </div>
         </div>
+
+        {/* Preview Modal */}
+        {showPreview && selectedProduct && (
+          <CheckoutPreview
+            product={selectedProduct}
+            title={checkoutTitle}
+            description={checkoutDescription}
+            customMessage={customMessage}
+            collectPhone={collectPhone}
+            collectEmail={collectEmail}
+            upsells={upsells}
+            downsells={downsells}
+            onClose={() => setShowPreview(false)}
+          />
+        )}
       </div>
     </Layout>
   );
