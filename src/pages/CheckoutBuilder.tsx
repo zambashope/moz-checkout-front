@@ -1,373 +1,277 @@
 
 import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 import Layout from '../components/Layout';
+import ProductSelector from '../components/ProductSelector';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Switch } from '@/components/ui/switch';
+import { Separator } from '@/components/ui/separator';
+import { Save, Eye, Settings, Package } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import { ArrowLeft, Eye, Save, Palette, Type, Image } from 'lucide-react';
-import { Link } from 'react-router-dom';
+
+// Mock products data - in real app this would come from API/database
+const mockProducts = [
+  {
+    id: '1',
+    title: 'E-book: Marketing Digital Completo',
+    description: 'Um guia completo sobre estratégias de marketing digital para fazer seu negócio crescer',
+    price: 149.99,
+  },
+  {
+    id: '2',
+    title: 'Curso Online: Vendas no Digital',
+    description: 'Aprenda técnicas avançadas de vendas online e aumente sua conversão',
+    price: 299.99,
+  },
+  {
+    id: '3',
+    title: 'Template: Landing Pages',
+    description: 'Pack com 10 templates profissionais de landing pages para alta conversão',
+    price: 89.99,
+  }
+];
 
 const CheckoutBuilder = () => {
-  const navigate = useNavigate();
-  const { productId } = useParams();
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+  const [checkoutTitle, setCheckoutTitle] = useState('');
+  const [checkoutDescription, setCheckoutDescription] = useState('');
+  const [customMessage, setCustomMessage] = useState('');
+  const [collectPhone, setCollectPhone] = useState(true);
+  const [collectEmail, setCollectEmail] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
-  const [checkoutData, setCheckoutData] = useState({
-    title: 'E-book: Marketing Digital Completo',
-    description: 'Aprenda as melhores estratégias de marketing digital para fazer seu negócio crescer online.',
-    price: 99.99,
-    buttonText: 'Comprar Agora',
-    backgroundColor: '#ffffff',
-    buttonColor: '#3b82f6',
-    textColor: '#1f2937',
-    logo: null as File | null,
-    features: [
-      '120 páginas de conteúdo exclusivo',
-      'Estratégias práticas e testadas',
-      'Templates prontos para usar',
-      'Suporte por 30 dias'
-    ]
-  });
 
-  const [activeTab, setActiveTab] = useState<'content' | 'design'>('content');
+  const selectedProduct = mockProducts.find(p => p.id === selectedProductId);
 
-  const handleInputChange = (field: string, value: string | number) => {
-    setCheckoutData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const handleFeatureChange = (index: number, value: string) => {
-    const newFeatures = [...checkoutData.features];
-    newFeatures[index] = value;
-    setCheckoutData(prev => ({
-      ...prev,
-      features: newFeatures
-    }));
-  };
-
-  const addFeature = () => {
-    setCheckoutData(prev => ({
-      ...prev,
-      features: [...prev.features, '']
-    }));
-  };
-
-  const removeFeature = (index: number) => {
-    setCheckoutData(prev => ({
-      ...prev,
-      features: prev.features.filter((_, i) => i !== index)
-    }));
-  };
-
-  const handleSave = async () => {
-    setIsLoading(true);
-    
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      toast({
-        title: "Sucesso!",
-        description: "Página de checkout salva com sucesso"
-      });
-      
-      navigate('/checkouts');
-    } catch (error) {
+  const handleSaveCheckout = async () => {
+    if (!selectedProductId) {
       toast({
         title: "Erro",
-        description: "Erro ao salvar checkout. Tente novamente.",
+        description: "Por favor, selecione um produto para o checkout",
         variant: "destructive"
       });
-    } finally {
-      setIsLoading(false);
+      return;
     }
+
+    if (!checkoutTitle.trim()) {
+      toast({
+        title: "Erro",
+        description: "Por favor, adicione um título para o checkout",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Mock save checkout
+    console.log('Saving checkout:', {
+      productId: selectedProductId,
+      title: checkoutTitle,
+      description: checkoutDescription,
+      customMessage,
+      collectPhone,
+      collectEmail
+    });
+    
+    setIsLoading(false);
+    
+    toast({
+      title: "Checkout salvo!",
+      description: "Seu checkout foi configurado com sucesso"
+    });
+  };
+
+  const handlePreview = () => {
+    if (!selectedProductId) {
+      toast({
+        title: "Aviso",
+        description: "Selecione um produto para visualizar o checkout",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Mock preview functionality
+    toast({
+      title: "Preview em desenvolvimento",
+      description: "Funcionalidade de preview será implementada em breve"
+    });
   };
 
   return (
     <Layout>
-      <div className="flex h-[calc(100vh-4rem)]">
-        {/* Editor Panel */}
-        <div className="w-1/2 p-6 overflow-y-auto border-r">
-          <div className="mb-6">
-            <Link to="/dashboard" className="flex items-center text-gray-600 hover:text-gray-900 mb-4">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Voltar ao Dashboard
-            </Link>
-            <h1 className="text-2xl font-bold text-gray-900">Editor de Checkout</h1>
-            <p className="text-gray-600 mt-1">Personalize sua página de vendas</p>
-          </div>
-
-          {/* Tabs */}
-          <div className="flex space-x-1 mb-6 bg-gray-100 p-1 rounded-lg">
-            <button
-              onClick={() => setActiveTab('content')}
-              className={`flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                activeTab === 'content'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              <Type className="h-4 w-4 mr-2" />
-              Conteúdo
-            </button>
-            <button
-              onClick={() => setActiveTab('design')}
-              className={`flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                activeTab === 'design'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              <Palette className="h-4 w-4 mr-2" />
-              Design
-            </button>
-          </div>
-
-          {/* Content Tab */}
-          {activeTab === 'content' && (
-            <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Informações do Produto</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label htmlFor="title">Título</Label>
-                    <Input
-                      id="title"
-                      value={checkoutData.title}
-                      onChange={(e) => handleInputChange('title', e.target.value)}
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="description">Descrição</Label>
-                    <Textarea
-                      id="description"
-                      value={checkoutData.description}
-                      onChange={(e) => handleInputChange('description', e.target.value)}
-                      rows={3}
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="price">Preço (MZN)</Label>
-                    <Input
-                      id="price"
-                      type="number"
-                      step="0.01"
-                      value={checkoutData.price}
-                      onChange={(e) => handleInputChange('price', parseFloat(e.target.value))}
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="buttonText">Texto do Botão</Label>
-                    <Input
-                      id="buttonText"
-                      value={checkoutData.buttonText}
-                      onChange={(e) => handleInputChange('buttonText', e.target.value)}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Benefícios do Produto</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {checkoutData.features.map((feature, index) => (
-                    <div key={index} className="flex space-x-2">
-                      <Input
-                        value={feature}
-                        onChange={(e) => handleFeatureChange(index, e.target.value)}
-                        placeholder="Digite um benefício..."
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => removeFeature(index)}
-                      >
-                        Remover
-                      </Button>
-                    </div>
-                  ))}
-                  <Button type="button" variant="outline" onClick={addFeature}>
-                    + Adicionar Benefício
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-
-          {/* Design Tab */}
-          {activeTab === 'design' && (
-            <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Cores</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label htmlFor="backgroundColor">Cor de Fundo</Label>
-                    <div className="flex space-x-2">
-                      <Input
-                        id="backgroundColor"
-                        type="color"
-                        value={checkoutData.backgroundColor}
-                        onChange={(e) => handleInputChange('backgroundColor', e.target.value)}
-                        className="w-16 h-10"
-                      />
-                      <Input
-                        value={checkoutData.backgroundColor}
-                        onChange={(e) => handleInputChange('backgroundColor', e.target.value)}
-                        placeholder="#ffffff"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="buttonColor">Cor do Botão</Label>
-                    <div className="flex space-x-2">
-                      <Input
-                        id="buttonColor"
-                        type="color"
-                        value={checkoutData.buttonColor}
-                        onChange={(e) => handleInputChange('buttonColor', e.target.value)}
-                        className="w-16 h-10"
-                      />
-                      <Input
-                        value={checkoutData.buttonColor}
-                        onChange={(e) => handleInputChange('buttonColor', e.target.value)}
-                        placeholder="#3b82f6"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="textColor">Cor do Texto</Label>
-                    <div className="flex space-x-2">
-                      <Input
-                        id="textColor"
-                        type="color"
-                        value={checkoutData.textColor}
-                        onChange={(e) => handleInputChange('textColor', e.target.value)}
-                        className="w-16 h-10"
-                      />
-                      <Input
-                        value={checkoutData.textColor}
-                        onChange={(e) => handleInputChange('textColor', e.target.value)}
-                        placeholder="#1f2937"
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Logo</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                    <Image className="mx-auto h-12 w-12 text-gray-400" />
-                    <div className="mt-4">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => setCheckoutData(prev => ({ ...prev, logo: e.target.files?.[0] || null }))}
-                        className="hidden"
-                        id="logo-upload"
-                      />
-                      <label
-                        htmlFor="logo-upload"
-                        className="cursor-pointer bg-white px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50"
-                      >
-                        Escolher Logo
-                      </label>
-                    </div>
-                    <p className="mt-2 text-sm text-gray-500">
-                      {checkoutData.logo ? checkoutData.logo.name : 'PNG, JPG até 2MB'}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-
-          {/* Action Buttons */}
-          <div className="mt-8 flex space-x-4">
-            <Button onClick={handleSave} disabled={isLoading} className="flex-1">
-              <Save className="h-4 w-4 mr-2" />
-              {isLoading ? 'Salvando...' : 'Salvar Checkout'}
-            </Button>
-          </div>
+      <div className="p-6 max-w-6xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Construtor de Checkout</h1>
+          <p className="text-gray-600">Configure seu checkout personalizado para vender seus produtos</p>
         </div>
 
-        {/* Preview Panel */}
-        <div className="w-1/2 bg-gray-100 p-6 overflow-y-auto">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">Preview</h2>
-            <div className="flex items-center text-sm text-gray-600">
-              <Eye className="h-4 w-4 mr-1" />
-              Visualização ao vivo
-            </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Configuration */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Product Selection */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Package className="h-5 w-5" />
+                  Seleção de Produto
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ProductSelector
+                  products={mockProducts}
+                  selectedProductId={selectedProductId}
+                  onSelectProduct={setSelectedProductId}
+                />
+              </CardContent>
+            </Card>
+
+            {/* Checkout Configuration */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Settings className="h-5 w-5" />
+                  Configuração do Checkout
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="title">Título do Checkout</Label>
+                  <Input
+                    id="title"
+                    placeholder="Ex: Adquira seu E-book agora!"
+                    value={checkoutTitle}
+                    onChange={(e) => setCheckoutTitle(e.target.value)}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="description">Descrição (opcional)</Label>
+                  <Textarea
+                    id="description"
+                    placeholder="Adicione uma descrição personalizada para seu checkout..."
+                    value={checkoutDescription}
+                    onChange={(e) => setCheckoutDescription(e.target.value)}
+                    rows={3}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="message">Mensagem Personalizada (opcional)</Label>
+                  <Textarea
+                    id="message"
+                    placeholder="Ex: Obrigado pela sua compra! Você receberá o produto em instantes..."
+                    value={customMessage}
+                    onChange={(e) => setCustomMessage(e.target.value)}
+                    rows={2}
+                  />
+                </div>
+
+                <Separator />
+
+                <div className="space-y-4">
+                  <h4 className="font-medium text-gray-900">Campos de Coleta</h4>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label className="text-sm font-normal">Coletar Número de Telefone</Label>
+                      <p className="text-xs text-gray-500">Obrigatório para identificar compras futuras</p>
+                    </div>
+                    <Switch
+                      checked={collectPhone}
+                      onCheckedChange={setCollectPhone}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label className="text-sm font-normal">Coletar E-mail</Label>
+                      <p className="text-xs text-gray-500">Para envio de confirmações e updates</p>
+                    </div>
+                    <Switch
+                      checked={collectEmail}
+                      onCheckedChange={setCollectEmail}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
-          {/* Checkout Preview */}
-          <div 
-            className="max-w-md mx-auto rounded-lg shadow-lg overflow-hidden"
-            style={{ backgroundColor: checkoutData.backgroundColor }}
-          >
-            <div className="p-8" style={{ color: checkoutData.textColor }}>
-              {checkoutData.logo && (
-                <div className="text-center mb-6">
-                  <div className="w-16 h-16 bg-gray-200 rounded-full mx-auto"></div>
+          {/* Preview/Summary */}
+          <div className="lg:col-span-1">
+            <Card className="sticky top-6">
+              <CardHeader>
+                <CardTitle className="text-lg">Resumo do Checkout</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {selectedProduct ? (
+                  <div className="space-y-3">
+                    <div className="p-3 bg-gray-50 rounded-lg">
+                      <h4 className="font-medium text-sm text-gray-900 mb-1">
+                        {selectedProduct.title}
+                      </h4>
+                      <p className="text-xs text-gray-600 line-clamp-2">
+                        {selectedProduct.description}
+                      </p>
+                      <p className="text-lg font-bold text-green-600 mt-2">
+                        {selectedProduct.price.toLocaleString('pt-BR', { 
+                          style: 'currency', 
+                          currency: 'MZN' 
+                        })}
+                      </p>
+                    </div>
+                    
+                    {checkoutTitle && (
+                      <div>
+                        <Label className="text-xs text-gray-500">Título:</Label>
+                        <p className="text-sm font-medium">{checkoutTitle}</p>
+                      </div>
+                    )}
+                    
+                    <div className="text-xs text-gray-500">
+                      <p>Campos coletados:</p>
+                      <ul className="mt-1 space-y-1">
+                        {collectPhone && <li>• Número de telefone</li>}
+                        {collectEmail && <li>• E-mail</li>}
+                      </ul>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center text-gray-500 py-8">
+                    <Package className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                    <p className="text-sm">Selecione um produto para ver o resumo</p>
+                  </div>
+                )}
+
+                <div className="space-y-2 pt-4 border-t">
+                  <Button 
+                    onClick={handlePreview}
+                    variant="outline" 
+                    className="w-full"
+                    disabled={!selectedProductId}
+                  >
+                    <Eye className="h-4 w-4 mr-2" />
+                    Visualizar
+                  </Button>
+                  
+                  <Button 
+                    onClick={handleSaveCheckout}
+                    className="w-full"
+                    disabled={isLoading || !selectedProductId}
+                  >
+                    <Save className="h-4 w-4 mr-2" />
+                    {isLoading ? 'Salvando...' : 'Salvar Checkout'}
+                  </Button>
                 </div>
-              )}
-              
-              <h1 className="text-2xl font-bold mb-4 text-center">
-                {checkoutData.title}
-              </h1>
-              
-              <p className="text-center mb-6 opacity-90">
-                {checkoutData.description}
-              </p>
-
-              <div className="text-center mb-6">
-                <span className="text-3xl font-bold">
-                  {checkoutData.price.toLocaleString('pt-BR', { style: 'currency', currency: 'MZN' })}
-                </span>
-              </div>
-
-              <ul className="space-y-2 mb-8">
-                {checkoutData.features.filter(f => f).map((feature, index) => (
-                  <li key={index} className="flex items-center">
-                    <span className="text-green-500 mr-2">✓</span>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-
-              <button
-                className="w-full py-4 px-6 rounded-lg font-semibold text-white text-lg shadow-lg hover:shadow-xl transition-shadow"
-                style={{ backgroundColor: checkoutData.buttonColor }}
-              >
-                {checkoutData.buttonText}
-              </button>
-
-              <p className="text-center text-sm mt-4 opacity-75">
-                Compra 100% segura • Garantia de 7 dias
-              </p>
-            </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
