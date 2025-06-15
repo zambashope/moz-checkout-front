@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
@@ -10,7 +9,8 @@ import {
   LogOut,
   Menu,
   X,
-  ShoppingBag
+  ShoppingBag,
+  BarChart3
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -34,6 +34,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { name: 'Criar Produto', href: '/create-product', icon: Package },
     { name: 'Checkouts', href: '/checkouts', icon: CreditCard },
     { name: 'Meus Produtos', href: '/my-products', icon: ShoppingBag },
+    { name: 'Analytics', href: '/analytics', icon: BarChart3 },
     { name: 'Configurações', href: '/settings', icon: Settings },
   ];
 
