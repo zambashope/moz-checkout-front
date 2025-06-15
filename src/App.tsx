@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -19,6 +18,7 @@ import MyProducts from "./pages/MyProducts";
 import UserSettings from "./pages/UserSettings";
 import Analytics from "./pages/Analytics";
 import NotFound from "./pages/NotFound";
+import Withdraw from "./pages/Withdraw";
 
 const queryClient = new QueryClient();
 
@@ -91,6 +91,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <UserSettings />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/withdraw" 
+        element={
+          <ProtectedRoute>
+            <Withdraw />
           </ProtectedRoute>
         } 
       />

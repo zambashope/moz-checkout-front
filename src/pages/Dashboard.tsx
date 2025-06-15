@@ -1,10 +1,10 @@
-
 import React from 'react';
 import Layout from '../components/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, Package, CreditCard, TrendingUp, Users } from 'lucide-react';
+import { Plus, Package, CreditCard, TrendingUp, Users, Wallet } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   // Mock data - in real app this would come from API
@@ -39,6 +39,9 @@ const Dashboard = () => {
     }
   ];
 
+  const saldoAtual = 3200.75; // Valor mock, em produção buscar do backend
+  const navigate = useNavigate();
+
   return (
     <Layout>
       <div className="p-6">
@@ -48,7 +51,27 @@ const Dashboard = () => {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Saldo Atual</CardTitle>
+              <Wallet className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{saldoAtual.toLocaleString('pt-BR', { style: 'currency', currency: 'MZN' })}</div>
+              <Button 
+                className="mt-2 w-full"
+                variant="secondary"
+                onClick={() => navigate("/withdraw")}
+              >
+                Sacar
+              </Button>
+              <p className="text-xs text-muted-foreground mt-2">Disponível para saque</p>
+            </CardContent>
+          </Card>
+
+          {/* Demais cartões: Vendas, Produtos, Checkouts, Conversão */}
+          {/* Remover grid-cols-4 e passar para grid-cols-5 */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Vendas Totais</CardTitle>
@@ -94,7 +117,7 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        {/* Quick Actions */}
+        {/* Quick Actions & Recent Products */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           <Card className="lg:col-span-2">
             <CardHeader>
